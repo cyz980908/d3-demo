@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta 
+charset="utf-8">
+<title>canvas直线</title>
+<meta 
+name="Keywords" content="">
+<meta name="author" 
+content="@my_programmer">
+<style type="text/css">
+body, 
+h1{margin:0;}
+canvas{margin: 
+20px;}
+</style>
+</head>
+<body >
+<canvas id="canvas" 
+width=600 height=600></canvas>
+<script>
+var canvas=document.getElementById('canvas');
+var context=canvas.getContext('2d');
+//context.beginPath();
+//context.arc(300,300,300,0,2*Math.PI);
+//context.stroke();
+var points = []	
+for(var i =180/(16*6);i< 360 + 180/(16*6);i+=360/(16*6))
+{
+	points.push(angle(i, 300, 300, 300))
+}
+for(var j=points.length *5/ 6;j<points.length; j++)
+{
+	if (Math.floor(Math.random() *16) >8) continue;
+	var endIndex = Math.floor(Math.random() * (points.length -1) / 6);
+	drawQuadraticCurve(points[j].x, points[j].y, points[endIndex].x, points[endIndex].y, '#aaa')
+}
+for(var j=points.length *5/ 6;j<points.length;j++)
+{
+	if (Math.floor(Math.random() *16) >6) continue;
+	var endIndex = Math.floor(Math.random() * (points.length -1) / 6) + points.length *1/ 6;
+	drawQuadraticCurve(points[j].x, points[j].y, points[endIndex].x, points[endIndex].y, '#ab8069')
+}
+for(var j=points.length *5/ 6;j<points.length;j++)
+{
+	if (Math.floor(Math.random() *16) >8) continue;
+	var endIndex = Math.floor(Math.random() * (points.length -1) / 6) + points.length *2/ 6;
+	drawQuadraticCurve(points[j].x, points[j].y, points[endIndex].x, points[endIndex].y, '#aaa')
+}
+
+for(var j=points.length *5/ 6;j<points.length;j++)
+{
+	if (Math.floor(Math.random() *16) >16) continue;
+	var endIndex = Math.floor(Math.random() * (points.length -1) / 6) + points.length *3/ 6;
+	drawQuadraticCurve(points[j].x, points[j].y, points[endIndex].x, points[endIndex].y, '#ab8069')
+}
+for(var j=points.length *5/ 6;j<points.length;j++)
+{
+	if (Math.floor(Math.random() *16) >12) continue;
+	var endIndex = Math.floor(Math.random() * (points.length -1) / 6) + points.length *4/ 6;
+	drawQuadraticCurve(points[j].x, points[j].y, points[endIndex].x, points[endIndex].y, '#aaa')
+}
+
+function drawQuadraticCurve(ax, ay, bx, by, color)
+{
+	context.beginPath();
+	context.moveTo(ax+Math.random()*2, ay+Math.random()*2); 
+	context.quadraticCurveTo(300,300,bx+Math.random()*2,by+Math.random()*2); 
+	context.strokeStyle = color; 
+	context.stroke(); 
+}
+//计算圆上每个点的坐标
+///[a]角度[i]刻度[ox]圆心X坐标[oy]圆心Y坐标[or]圆半径
+function angle(a, ox, oy, or) {
+	var hudu = (2 * Math.PI / 360) * a;//求出弧度
+	var x = ox + Math.sin(hudu) * or;//计算出x轴坐标for正弦
+	var y = oy - Math.cos(hudu) * or;//计算出y轴坐标for余弦
+	return {
+		x:x,
+		y:y
+	}
+}
+
+</script>
+</body>
+</html>
