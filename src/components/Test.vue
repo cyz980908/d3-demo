@@ -189,12 +189,70 @@ export default {
                 .on("click", clicked);
         },
         async addEdge() {
-            var curve = function(args) {
-                console.log(args)
-                let data = d3.curveCardinal.tension(0)(args)
-                console.log(data)
-                return data
+
+            
+            const point = (that, x, y) => {
+                that._context.bezierCurveTo(
+                    (2 * that._x0 + that._x1) / 3,
+                    (2 * that._y0 + that._y1) / 3,
+                    (that._x0 + 2 * that._x1) / 3,
+                    (that._y0 + 2 * that._y1) / 3,
+                    (that._x0 + 4 * that._x1 + x) / 6,
+                    (that._y0 + 4 * that._y1 + y) / 6
+                );
+                console.log(that,x,y)
+                // that._context.quadraticCurveTo(
+                //     (that._x0 + 2 * that._x1) / 3,
+                //     (that._y0 + 2 * that._y1) / 3,
+                //     (that._x0 + 4 * that._x1 + x) / 6,
+                //     (that._y0 + 4 * that._y1 + y) / 6
+                // )
             }
+
+            function QuadraticCurve(context) {
+                this._context = context;
+            }
+
+            QuadraticCurve.prototype = {
+                areaStart: function() {
+                    this._line = 0;
+                },
+                areaEnd: function() {
+                    this._line = NaN;
+                },
+                lineStart: function() {
+                    this._x0 = this._x1 =
+                    this._y0 = this._y1 = NaN;
+                    this._point = 0;
+                },
+                lineEnd: function() {
+                    console.log(this._point)
+                    switch (this._point) {
+                    case 3: point(this, this._x1, this._y1); // falls through
+                    case 2: this._context.lineTo(this._x1, this._y1); break;
+                    }
+                    if (this._line || (this._line !== 0 && this._point === 1)) this._context.closePath();
+                    this._line = 1 - this._line;
+                },
+                point: function(x, y) {
+                    x = +x, y = +y;
+                    switch (this._point) {
+                    case 0: this._point = 1; this._line ? this._context.lineTo(x, y) : this._context.moveTo(x, y); break;
+                    case 1: this._point = 2; break;
+                    case 2: this._point = 3; this._context.lineTo((5 * this._x0 + this._x1) / 6, (5 * this._y0 + this._y1) / 6); // falls through
+                    default: point(this, x, y); break;
+                    }
+                    this._x0 = this._x1, this._x1 = x;
+                    this._y0 = this._y1, this._y1 = y;
+                }
+            };
+
+            const quadraticCurve = function(context) {
+                return new QuadraticCurve(context, 0.5);
+            };
+
+            // var curve = Step 
+
             let d3 = window.d3
             let diameter = 880,
                 radius = diameter / 2,
@@ -204,7 +262,7 @@ export default {
                 .size([360, innerRadius]);
 
             var line = d3.radialLine()
-                .curve(curve)
+                .curve(quadraticCurve)
                 .radius(function (d) { return d.y; })
                 .angle(function (d) { return d.x / 180 * Math.PI; });
 
@@ -278,7 +336,7 @@ export default {
                 // For each import, construct a link from the source to target node.
                 nodes.forEach(function (d) {
                     if (d.data.imports) d.data.imports.forEach(function (i) {
-                        Math.random()>0.9? imports.push(map[d.data.name].path(map[i])):''
+                        Math.random()>0.95? imports.push(map[d.data.name].path(map[i])):''
                     });
                 });
 

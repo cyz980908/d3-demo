@@ -3,7 +3,7 @@
     <HelloWorld  msg="Welcome to Your Vue.js App"/>
     <Pie/>
     <Edge />
-    <Test/>
+    <HardAngle/>
   </div>
 </template>
 
@@ -11,7 +11,7 @@
 import HelloWorld from './components/HelloWorld.vue'
 import Pie from './components/Pie.vue'
 import Edge from './components/Edge.vue'
-import Test from './components/Test.vue'
+import HardAngle from './components/HardAngle.vue'
 
 export default {
   name: 'App',
@@ -19,7 +19,7 @@ export default {
     HelloWorld,
     Edge,
     Pie,
-    Test
+    HardAngle
   }
 }
 </script>
